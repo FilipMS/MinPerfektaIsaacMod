@@ -1,4 +1,5 @@
-<items gfxroot="gfx/items/" version="1">
-    <passive id="1" name="Damage Potion" gfx="damage_potion_item.png" description="It smells like ashes and anger" quality="1" cache="damage" />
-    <active id="2" name="Big Red Button" description="DO NOT PRESS" gfx="big_red_button_item.png" maxcharges="6" chargetype="normal"  quality="4" />
+<items gfxroot="gfx/items/" deathanm2="gfx/death_items.anm2" version="1">
+    <passive id="0" name="Damage Potion" gfx="damage_potion_item.png" description="It smells like ashes and anger" quality="1" cache="damage" />
+    <active id="1" name="Big Red Button" description="DO NOT PRESS" gfx="big_red_button_item.png" maxcharges="6" chargetype="normal"  quality="4" />
+    <passive id="2" name="Pollen" gfx="pollen_item.png" description="It smells like allergy" quality="1"/>
 </items>
