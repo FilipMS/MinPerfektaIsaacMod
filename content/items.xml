@@ -2,4 +2,5 @@
     <passive id="0" name="Damage Potion" gfx="damage_potion_item.png" description="It smells like ashes and anger" quality="1" cache="damage" />
     <active id="1" name="Big Red Button" description="DO NOT PRESS" gfx="big_red_button_item.png" maxcharges="6" chargetype="normal"  quality="4" />
     <passive id="2" name="Pollen" gfx="pollen_item.png" description="It smells like allergy" quality="1"/>
+    <passive id="3" name="Exclamation Mark" gfx="exclamation_mark_item.png" description="Get stamped" quality="0"/>
 </items>
