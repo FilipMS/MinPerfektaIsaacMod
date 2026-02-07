@@ -1,5 +1,5 @@
 <players root="gfx/characters/costumes/" portraitroot="gfx/ui/stage/" nameimageroot="gfx/ui/boss/">
-    <player name="Gabriel"
+    <player name="Suika"
         skin="character_gabriel.png"
         nameimage="playername_gabriel.png"
         hp="4"
@@ -10,7 +10,7 @@
         items="178"
     />
 
-    <player name="Gabriel"
+    <player name="Suika"
         skin="character_gabriel_b.png"
         nameimage="playername_gabriel.png"
         hp="4"

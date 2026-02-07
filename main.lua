@@ -69,12 +69,12 @@ end
 
 mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.PollenNewRoom)
 
-local gabrielType = Isaac.GetPlayerTypeByName("Gabriel", false) -- Exactly as in the xml. The second argument is if you want the Tainted variant.
-local hairCostume = Isaac.GetCostumeIdByPath("gfx/characters/gabriel_hair.anm2") -- Exact path, with the "resources" folder as the root
-local stolesCostume = Isaac.GetCostumeIdByPath("gfx/characters/gabriel_stoles.anm2") -- Exact path, with the "resources" folder as the root
+local suikaType = Isaac.GetPlayerTypeByName("Suika", false) -- Exactly as in the xml. The second argument is if you want the Tainted variant.
+local hairCostume = Isaac.GetCostumeIdByPath("gfx/characters/suika_hair.anm2") -- Exact path, with the "resources" folder as the root
+local stolesCostume = Isaac.GetCostumeIdByPath("gfx/characters/suika_stoles.anm2") -- Exact path, with the "resources" folder as the root
 
 function mod:GiveCostumesOnInit(player)
-    if player:GetPlayerType() ~= gabrielType then
+    if player:GetPlayerType() ~= suikaType then
         return -- End the function early. The below code doesn't run, as long as the player isn't Gabriel.
     end
 
