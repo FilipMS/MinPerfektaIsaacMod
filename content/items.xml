@@ -3,4 +3,6 @@
     <active id="1" name="Big Red Button" description="DO NOT PRESS" gfx="big_red_button_item.png" maxcharges="6" chargetype="normal"  quality="4" />
     <passive id="2" name="Pollen" gfx="pollen_item.png" description="It smells like allergy" quality="1"/>
     <passive id="3" name="Exclamation Mark" gfx="exclamation_mark_item.png" description="Get stamped" quality="0"/>
+    <passive id="4" name="Suika's Shapes" gfx="the_universe_item.png" description="Throw shapes?" quality="3"/>
+    <active id="5" name="Minis!!" gfx="suika_split_item.png" description="Throw shapes?" maxcharges="3" chargetype="normal" quality="3"/>
 </items>

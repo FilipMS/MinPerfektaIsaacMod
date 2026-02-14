@@ -72,14 +72,57 @@ mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, mod.PollenNewRoom)
 local suikaType = Isaac.GetPlayerTypeByName("Suika", false) -- Exactly as in the xml. The second argument is if you want the Tainted variant.
 local hairCostume = Isaac.GetCostumeIdByPath("gfx/characters/suika_hair.anm2") -- Exact path, with the "resources" folder as the root
 local stolesCostume = Isaac.GetCostumeIdByPath("gfx/characters/suika_stoles.anm2") -- Exact path, with the "resources" folder as the root
+local SUIKAS_SHAPES_ID = Isaac.GetItemIdByName("Suika's Shapes")
+local MINIS_ID = Isaac.GetItemIdByName("Minis!!")
 
-function mod:GiveCostumesOnInit(player)
+
+function mod:SuikaInit(player)
     if player:GetPlayerType() ~= suikaType then
         return -- End the function early. The below code doesn't run, as long as the player isn't Gabriel.
     end
 
     player:AddNullCostume(hairCostume)
     player:AddNullCostume(stolesCostume)
+    player:AddCollectible(SUIKAS_SHAPES_ID, 0, false)
+    player:AddCollectible(MINIS_ID, 3, false)
 end
 
-mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, mod.GiveCostumesOnInit)
+mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, mod.SuikaInit)
+
+local SUIKAS_SHAPES_ID = Isaac.GetItemIdByName("Suika's Shapes")
+TearVariant.TETRAEDER = Isaac.GetEntityVariantByName("Tetraeder")
+TearVariant.KUB = Isaac.GetEntityVariantByName("Kub")
+TearVariant.KLOT = Isaac.GetEntityVariantByName("Klot")
+
+
+function mod:SuikaTears(tear)
+    local player = tear.SpawnerEntity and tear.SpawnerEntity:ToPlayer()
+    if not player then return end
+
+    if player:HasCollectible(SUIKAS_SHAPES_ID) then
+        local rng = player:GetCollectibleRNG(POLLEN_ITEM_ID)
+        local randomFloat = rng:RandomFloat()
+        if randomFloat < 0.2  then
+            tear:ChangeVariant(TearVariant.TETRAEDER)
+            tear.TearFlags = tear.TearFlags | TearFlags.TEAR_POISON
+        end
+        if randomFloat > 0.2 and randomFloat < 0.4  then
+            tear:ChangeVariant(TearVariant.KUB)
+            tear.TearFlags = tear.TearFlags | TearFlags.TEAR_POISON
+        end
+        if randomFloat > 0.4 and randomFloat < 0.6  then
+            tear:ChangeVariant(TearVariant.KLOT)
+            tear.TearFlags = tear.TearFlags | TearFlags.TEAR_POISON
+        end
+    end
+end
+
+mod:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, mod.SuikaTears)
+
+function mod:onDamage(entity, amt, flag, source, countdown)
+    if source.Type == EntityType.ENTITY_TEAR and source.Variant == TearVariant.TETRAEDER then
+        game:Fart(entity.Position, 50, nil, 1, 0)
+    end
+end
+
+mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, mod.onDamage)
