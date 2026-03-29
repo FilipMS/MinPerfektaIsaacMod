@@ -102,17 +102,21 @@ function mod:SuikaTears(tear)
     if player:HasCollectible(SUIKAS_SHAPES_ID) then
         local rng = player:GetCollectibleRNG(POLLEN_ITEM_ID)
         local randomFloat = rng:RandomFloat()
-        if randomFloat < 0.2  then
+        if randomFloat < 0.1  then
             tear:ChangeVariant(TearVariant.TETRAEDER)
-            tear.TearFlags = tear.TearFlags | TearFlags.TEAR_POISON
+            tear.TearFlags = tear.TearFlags  | TearFlags.TEAR_BOOMERANG | TearFlags.TEAR_SPECTRAL | TearFlags.TEAR_PIERCING
+            tear.Velocity = tear.Velocity * 1.2
+            tear.FallingSpeed = tear.FallingSpeed - 10
+            tear.FallingAcceleration = tear.FallingAcceleration * 0.6
         end
-        if randomFloat > 0.2 and randomFloat < 0.4  then
+        if randomFloat > 0.1 and randomFloat < 0.2  then
             tear:ChangeVariant(TearVariant.KUB)
-            tear.TearFlags = tear.TearFlags | TearFlags.TEAR_POISON
+            tear.TearFlags = tear.TearFlags
         end
-        if randomFloat > 0.4 and randomFloat < 0.6  then
+        if randomFloat > 0.2 and randomFloat < 0.3  then
             tear:ChangeVariant(TearVariant.KLOT)
-            tear.TearFlags = tear.TearFlags | TearFlags.TEAR_POISON
+            tear.TearFlags = tear.TearFlags | TearFlags.TEAR_BOUNCE | TearFlags.TEAR_POP
+            tear.Velocity = tear.Velocity * 2
         end
     end
 end
@@ -121,8 +125,80 @@ mod:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, mod.SuikaTears)
 
 function mod:onDamage(entity, amt, flag, source, countdown)
     if source.Type == EntityType.ENTITY_TEAR and source.Variant == TearVariant.TETRAEDER then
-        game:Fart(entity.Position, 50, nil, 1, 0)
+        -- game:Fart(entity.Position, 50, nil, 1, 0)
     end
 end
 
 mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, mod.onDamage)
+
+function mod:OnTearCollision(tear, collider, low)
+        if tear.Variant == TearVariant.KUB then
+            local npc = collider:ToNPC()
+            if npc and npc:IsVulnerableEnemy() then
+
+                while npc.Parent do
+                    npc = npc.Parent:ToNPC()
+                end
+
+                mod:ApplyAnimaSolaEffect(npc, tear)
+                tear:Remove()
+            end
+        end
+        
+end
+mod:AddCallback(ModCallbacks.MC_PRE_TEAR_COLLISION, mod.OnTearCollision)
+
+function mod:ApplyAnimaSolaEffect(npc, tear)
+    local player = tear.SpawnerEntity and tear.SpawnerEntity:ToPlayer()
+    if not player then return end
+
+    local chain = Isaac.Spawn(
+        EntityType.ENTITY_EFFECT,
+        EffectVariant.ANIMA_CHAIN,
+        0,
+        npc.Position,
+        Vector.Zero,
+        player
+    ):ToEffect()
+
+    chain.Parent = npc
+    chain.Target = npc
+    chain.Timeout = 30
+
+    chain.SpawnerEntity = player
+
+    npc:AddEntityFlags(EntityFlag.FLAG_NO_KNOCKBACK | EntityFlag.FLAG_NO_PHYSICS_KNOCKBACK)
+end
+
+local MINI_SUIKAS_ID = Isaac.GetItemIdByName("Minis!!")
+
+function mod:MiniSuikasUse(_, _, player)
+    local mini = player:AddMinisaac(player.Position, true)
+    mini:GetData().IsSuika = true
+
+    local mini2 = player:AddMinisaac(player.Position, true)
+    mini2:GetData().IsSuika = true
+
+    return {
+        Discharge = true,
+        Remove = false,
+        ShowAnim = true
+    }
+end
+
+mod:AddCallback(ModCallbacks.MC_USE_ITEM, mod.MiniSuikasUse, MINI_SUIKAS_ID)
+
+function mod:UpdateMini(familiar)
+    local data = familiar:GetData()
+    if not data.IsSuika then return end
+    if data.Init then return end
+    data.Init = true
+
+    local sprite = familiar:GetSprite()
+    sprite:ReplaceSpritesheet(0, "gfx/familiar/suika_minisaac.png")
+    sprite:ReplaceSpritesheet(1, "gfx/familiar/suika_minisaac.png")
+    sprite:LoadGraphics()
+end
+
+mod:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, mod.UpdateMini, FamiliarVariant.MINISAAC)
+
