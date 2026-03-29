@@ -84,7 +84,7 @@ function mod:SuikaInit(player)
     player:AddNullCostume(hairCostume)
     player:AddNullCostume(stolesCostume)
     player:AddCollectible(SUIKAS_SHAPES_ID, 0, false)
-    player:AddCollectible(MINIS_ID, 3, false)
+    player:AddCollectible(MINIS_ID, 4, false)
 end
 
 mod:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, mod.SuikaInit)
@@ -173,10 +173,10 @@ end
 local MINI_SUIKAS_ID = Isaac.GetItemIdByName("Minis!!")
 
 function mod:MiniSuikasUse(_, _, player)
-    local mini = player:AddMinisaac(player.Position, true)
+    local mini = player:AddMinisaac(player.Position, false)
     mini:GetData().IsSuika = true
 
-    local mini2 = player:AddMinisaac(player.Position, true)
+    local mini2 = player:AddMinisaac(player.Position, false)
     mini2:GetData().IsSuika = true
 
     return {
